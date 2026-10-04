@@ -14,6 +14,9 @@ import cookieParser from 'cookie-parser';
 import mongoSanitize from 'express-mongo-sanitize';
 import helmet from 'helmet';
 import xss from 'xss-clean';
+import hpp from 'hpp';
+import rateLimit from 'express-rate-limit';
+import dayjs from 'dayjs';
 
 configDotenv({ path: './config/config.env' });
 const PORT = process.env.PORT || 5000;
@@ -27,6 +30,17 @@ app.use(helmet());
 
 // prevent Cross-site scripting text
 app.use(xss());
+
+// Rate limiting
+const limiter = rateLimit({
+  windowMs: 10 * 60 * 1000,
+  max: 1,
+});
+
+app.use(limiter);
+
+// Prevent http paramter pollution
+app.use(hpp());
 
 app.use(express.static(path.join(import.meta.dirname, 'images')));
 app.set('query parser', 'extended');
