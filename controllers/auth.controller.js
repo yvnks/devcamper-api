@@ -43,7 +43,10 @@ export const login = asyncHandler(async (req, res, next) => {
   sendTokenResponse(user, 200, res);
 });
 
-export const getMe = asyncHandler(async (req, res) => {
+export const getMe = asyncHandler(async (req, res, next) => {
+  if (!req.user) {
+    return next(new CustomErrorHandlerAPI(`Not authorized to access this route`, 401));
+  }
   const user = await User.findById(req.user.id);
 
   res.status(200).json({
@@ -59,8 +62,8 @@ export const updateDetails = asyncHandler(async (req, res, next) => {
   };
 
   const user = await User.findByIdAndUpdate(req.user.id, fieldsToUpdate, {
-    new: true,
-    runvalidators: true,
+    returnDocument: 'after',
+    runValidators: true,
   });
 
   res.status(200).json({
@@ -148,7 +151,7 @@ export const resetPassword = asyncHandler(async (req, res, next) => {
   });
 
   if (!user) {
-    return next(CustomErrorHandlerAPI(`Invalid token`, 400));
+    return next(new CustomErrorHandlerAPI(`Invalid token`, 400));
   }
 
   user.password = req.body.password;
@@ -180,7 +183,7 @@ const sendTokenResponse = (user, statusCode, res) => {
 
 export const logout = asyncHandler(async (req, res, next) => {
   res.cookie('token', 'none', {
-    expire: dayjs().add(10, 'minutes'),
+    expires: dayjs().add(10, 'minutes').toDate(),
     httpOnly: true,
   });
 

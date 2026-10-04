@@ -11,6 +11,9 @@ import customErrorHandler from './middleware/customErrorHandler.js';
 import fileUpload from 'express-fileupload';
 import path from 'path';
 import cookieParser from 'cookie-parser';
+import mongoSanitize from 'express-mongo-sanitize';
+import helmet from 'helmet';
+import xss from 'xss-clean';
 
 configDotenv({ path: './config/config.env' });
 const PORT = process.env.PORT || 5000;
@@ -19,6 +22,12 @@ const app = express();
 
 // Body parser middleware.
 app.use(express.json());
+app.use(mongoSanitize());
+app.use(helmet());
+
+// prevent Cross-site scripting text
+app.use(xss());
+
 app.use(express.static(path.join(import.meta.dirname, 'images')));
 app.set('query parser', 'extended');
 app.use(fileUpload());
@@ -28,6 +37,7 @@ if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
 
+// router middleware
 app.use('/api/v1/bootcamps', bootcamp);
 app.use('/api/v1/courses', courses);
 app.use('/api/v1/auth', auth);
