@@ -17,6 +17,7 @@ import xss from 'xss-clean';
 import hpp from 'hpp';
 import rateLimit from 'express-rate-limit';
 import dayjs from 'dayjs';
+import cors from 'cors';
 
 configDotenv({ path: './config/config.env' });
 const PORT = process.env.PORT || 5000;
@@ -37,6 +38,8 @@ const limiter = rateLimit({
   max: 1,
 });
 
+// enable cors
+app.use(cors());
 app.use(limiter);
 
 // Prevent http paramter pollution
