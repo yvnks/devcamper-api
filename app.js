@@ -45,7 +45,7 @@ app.use(limiter);
 // Prevent http paramter pollution
 app.use(hpp());
 
-app.use(express.static(path.join(import.meta.dirname, 'images')));
+app.use(express.static(path.join(import.meta.dirname, 'public')));
 app.set('query parser', 'extended');
 app.use(fileUpload());
 app.use(cookieParser());

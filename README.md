@@ -12,7 +12,7 @@ npm install
 ```
 
 ## Start application
-```bash
+```
 # run in development mode
 yarn dev
 
@@ -21,7 +21,7 @@ yarn start
 ```
 
 ## Environment Variables
-You will need to create a `.env` file in the root of the project and add the following environment variables:
+You will need to rename  `config.env.env` file in the root of the project to `config.env` and update the values and settings:
 ```
 NODE_ENV=development
 PORT=5000
@@ -30,3 +30,5 @@ MONGO_URI=your_mongo_uri
 JWT_SECRET=your_jwt_secret
 JWT_EXPIRE=30d
 ```
+- Version: 1.0.0
+- License: MIT
